@@ -1,0 +1,176 @@
+:root {
+  /* ---- Color tokens: diagnostic ops-console palette ---- */
+  --bg-base: #0B0F14;
+  --bg-panel: #121821;
+  --bg-panel-raised: #19212C;
+  --bg-panel-hover: #1F2833;
+  --border-subtle: #232D3A;
+  --border-strong: #333F4F;
+
+  --text-primary: #E7EBF1;
+  --text-secondary: #9AA7B8;
+  --text-tertiary: #647184;
+
+  --accent-amber: #E8A33D;
+  --accent-amber-dim: #8A6224;
+  --accent-teal: #4FB8A8;
+  --accent-teal-dim: #2E6E64;
+
+  --sev-critical: #E5484D;
+  --sev-high: #E8A33D;
+  --sev-medium: #D8C15A;
+  --sev-low: #4FB8A8;
+
+  --font-display: 'IBM Plex Mono', 'SF Mono', monospace;
+  --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root { min-height: 100vh; }
+
+a { color: inherit; }
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--accent-amber-dim);
+  color: var(--text-primary);
+}
+
+button, a, input, [tabindex] {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    opacity 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+/* Console-style scrollbars, subtle rather than default browser chrome */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* ---- Reusable animation system ---- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+@keyframes bounceDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.fade-in {
+  animation: fadeInUp 0.35s ease both;
+}
+
+.fade-in-stagger > * {
+  animation: fadeInUp 0.35s ease both;
+}
+.fade-in-stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.fade-in-stagger > *:nth-child(2) { animation-delay: 0.06s; }
+.fade-in-stagger > *:nth-child(3) { animation-delay: 0.10s; }
+.fade-in-stagger > *:nth-child(4) { animation-delay: 0.14s; }
+.fade-in-stagger > *:nth-child(5) { animation-delay: 0.18s; }
+.fade-in-stagger > *:nth-child(6) { animation-delay: 0.22s; }
+.fade-in-stagger > *:nth-child(7) { animation-delay: 0.26s; }
+.fade-in-stagger > *:nth-child(8) { animation-delay: 0.30s; }
+.fade-in-stagger > *:nth-child(9) { animation-delay: 0.34s; }
+.fade-in-stagger > *:nth-child(n+10) { animation-delay: 0.38s; }
+
+.pulse { animation: pulseGlow 1.8s ease-in-out infinite; }
+.spin { animation: spin 0.9s linear infinite; display: inline-block; }
+
+.progress-track {
+  position: relative;
+  height: 3px;
+  width: 100%;
+  background: var(--bg-panel-raised);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-track::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; height: 100%; width: 40%;
+  background: linear-gradient(90deg, transparent, var(--accent-amber), transparent);
+  animation: indeterminate 1.4s ease-in-out infinite;
+}
+
+.typing-dots { display: inline-flex; gap: 3px; align-items: center; padding: 2px 0; }
+.typing-dots span {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--text-tertiary);
+  animation: bounceDot 1.1s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+.scale-in { animation: scaleIn 0.22s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+
+/* Faint scanline / grid texture on the base background to reinforce the
+   "console" feel without being loud. */
+.console-bg {
+  background-image:
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: -1px -1px;
+}
+
+@media (max-width: 860px) {
+  .app-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .app-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
